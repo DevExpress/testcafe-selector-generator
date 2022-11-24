@@ -1,0 +1,64 @@
+name: 'Test'
+
+on:
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  Windows:
+    runs-on: windows-2019
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup node env
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm i
+
+      - name: Linting
+        run: npm run lint
+
+      - name: Run Tests (Chrome)
+        run: node node_modules/gulp/bin/gulp.js test --testBrowserAlias=chrome
+
+      - name: Run Tests (Firefox)
+        run: node node_modules/gulp/bin/gulp.js test-run --testBrowserAlias=firefox
+        if: ${{ always() }}
+
+      - name: Run Tests (Edge)
+        run: node node_modules/gulp/bin/gulp.js test-run --testBrowserAlias=edge
+        if: ${{ always() }}
+
+  macOS:
+    runs-on: macos-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup node env
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm i
+
+      - name: Run Tests (Chrome)
+        run: node node_modules/gulp/bin/gulp.js test --testBrowserAlias=chrome
+
+      - name: Run Tests (Firefox)
+        run: node node_modules/gulp/bin/gulp.js test-run --testBrowserAlias=firefox
+        if: ${{ always() }}
+
+      - name: Run Tests (Safari)
+        run: node node_modules/gulp/bin/gulp.js test-run --testBrowserAlias=safari
+        if: ${{ always() }}
