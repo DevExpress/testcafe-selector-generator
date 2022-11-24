@@ -1,12 +1,13 @@
+/* eslint-disable no-unused-vars */
 function getSelector (value, ruleType, ancestorRuleType) {
     const selector = {
         rawSelector: {
             type:  'js-expr',
-            value: value
+            value: value,
 
         },
 
-        ruleType: ruleType
+        ruleType: ruleType,
     };
 
     if (ancestorRuleType)

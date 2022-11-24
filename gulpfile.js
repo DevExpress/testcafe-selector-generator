@@ -1,3 +1,4 @@
+/* global require process */
 const fs = require('node:fs');
 
 const gulp      = require('gulp');
@@ -17,6 +18,7 @@ const QUNIT_SETTINGS = {
     port:            2000,
     crossDomainPort: 2001,
 
+    /* eslint-disable no-multi-spaces */
     scripts: [
         { src: '/hammerhead.js', path: 'node_modules/testcafe-hammerhead/lib/client/hammerhead.js' },
         { src: '/core.js',       path: 'node_modules/testcafe/lib/client/core/index.js' },
@@ -29,9 +31,10 @@ const QUNIT_SETTINGS = {
 
         { src: '/selector-generator.js', path: 'lib/load-selector-generator.js' },
     ],
+    /* eslint-enable no-multi-spaces */
 
     configApp: require('./test/utils/config-qunit-server-app'),
-    basePath:  'test/fixtures'
+    basePath:  'test/fixtures',
 };
 
 gulp.task('clear', () => {

@@ -8,7 +8,8 @@
   },
   "main": "src/index.js",
   "scripts": {
-    "test": "node node_modules/gulp/bin/gulp.js test"
+    "test": "node node_modules/gulp/bin/gulp.js test",
+    "lint": "node node_modules/eslint/bin/eslint.js ."
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,9 @@
   "devDependencies": {
     "@babel/core": "^7.20.2",
     "babel-plugin-add-module-exports": "^1.0.4",
+    "eslint": "^8.28.0",
+    "eslint-plugin-align-assignments": "^1.1.2",
+    "eslint-plugin-qunit": "^7.3.3",
     "gulp": "^4.0.2",
     "gulp-qunit-harness": "^1.0.3",
     "gulp-webmake": "^0.0.41",
@@ -36,13 +40,13 @@
     "testcafe-hammerhead": "^28.2.1"
   },
   "imports": {
-      "#src": [
-          "./src/index.js"
-      ],
-      "#src/*": [
-          "./src/*",
-          "./src/*.js",
-          "./src/*.json"
-      ]
+    "#src": [
+      "./src/index.js"
+    ],
+    "#src/*": [
+      "./src/*",
+      "./src/*.js",
+      "./src/*.json"
+    ]
   }
 }

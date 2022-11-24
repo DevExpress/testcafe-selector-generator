@@ -1,5 +1,5 @@
 import { BaseCreator } from './base-creator';
-import { RULE_TYPE } from '../selectors/rule-type';
+import { RULE_TYPE } from '../rules/rule-type';
 import { getAttributeValue } from './utils/attributes-watcher';
 import { getAttributesDescriptor, CLASS_ATTRIBUTE_NAME } from './utils/attr-utils';
 

@@ -1,4 +1,4 @@
-import { RULE_TYPE } from '../selectors/rule-type';
+import { RULE_TYPE } from '../rules/rule-type';
 import { TagNameSelectorCreator } from './tag-name-creator';
 import { IdSelectorCreator } from './id-creator';
 import { TextSelectorCreator } from './text-creator';

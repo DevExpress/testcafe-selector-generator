@@ -1,3 +1,4 @@
+/* eslint-disable no-empty-function, class-methods-use-this */
 export class BaseCreator {
     constructor (type) {
         this.type = type;

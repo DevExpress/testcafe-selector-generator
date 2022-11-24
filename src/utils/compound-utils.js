@@ -1,6 +1,6 @@
 import TESTCAFE_CORE from '../deps/testcafe-core';
 
-import { RULE_TYPE } from '../selectors/rule-type';
+import { RULE_TYPE } from '../rules/rule-type';
 
 const { arrayUtils } = TESTCAFE_CORE;
 

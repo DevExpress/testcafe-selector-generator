@@ -1,6 +1,6 @@
 import TESTCAFE_CORE from '../deps/testcafe-core';
 import { BaseCreator } from './base-creator';
-import { RULE_TYPE } from '../selectors/rule-type';
+import { RULE_TYPE } from '../rules/rule-type';
 import { SelectorDescriptor } from '../selector-descriptor';
 
 const { domUtils } = TESTCAFE_CORE;

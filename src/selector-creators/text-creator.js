@@ -1,6 +1,6 @@
 import TESTCAFE_CORE from '../deps/testcafe-core';
 import { BaseCreator } from './base-creator';
-import { RULE_TYPE } from '../selectors/rule-type';
+import { RULE_TYPE } from '../rules/rule-type';
 import { hasOwnTextForSelector, getOwnTextForSelector } from './utils/text-utils';
 import { SelectorDescriptor } from '../selector-descriptor';
 import { FilterOption } from '../selector-descriptor/filter-option';

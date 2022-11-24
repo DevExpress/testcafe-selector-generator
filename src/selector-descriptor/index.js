@@ -1,9 +1,31 @@
 import TESTCAFE_CORE from '../deps/testcafe-core';
 import * as FILTER_OPTION_TYPE from './filter-option-type';
-import { RULE_TYPE } from '../selectors/rule-type';
+import { RULE_TYPE } from '../rules/rule-type';
 import { FilterOption } from './filter-option';
 
 const { domUtils, arrayUtils } = TESTCAFE_CORE;
+
+function optionsToStringArray (options) {
+    const strings = [];
+
+    for (const option of options) {
+        if (arrayUtils.indexOf(options, option) === 0)
+            strings.push(`Selector('${option.filter}')`);
+        else if (option.type === FILTER_OPTION_TYPE.byText)
+            strings.push(`.withText('${option.filter}')`);
+        else if (option.type === FILTER_OPTION_TYPE.byIndex)
+            strings.push(`.nth(${option.filter})`);
+        else if (option.type === FILTER_OPTION_TYPE.byTag)
+            strings.push(`.find('${option.filter}')`);
+        else if (option.type === FILTER_OPTION_TYPE.byAttr) {
+            const attrValueString = option.filter.attrValueRe ? `, ${option.filter.attrValueRe}` : '';
+
+            strings.push(`.withAttribute('${option.filter.attrName}'${attrValueString})`);
+        }
+    }
+
+    return strings;
+}
 
 export class SelectorDescriptor {
     constructor (obj) {
@@ -25,7 +47,7 @@ export class SelectorDescriptor {
     }
 
     _getStringArrayRepresentation () {
-        return this._optionsToStringArray(this._concatFilterOptions());
+        return optionsToStringArray(this._concatFilterOptions());
     }
 
     _addFilterByIndex (elements) {
@@ -69,28 +91,6 @@ export class SelectorDescriptor {
         }, []);
     }
 
-    _optionsToStringArray (options) {
-        const strings = [];
-
-        for (const option of options) {
-            if (arrayUtils.indexOf(options, option) === 0)
-                strings.push(`Selector('${option.filter}')`);
-            else if (option.type === FILTER_OPTION_TYPE.byText)
-                strings.push(`.withText('${option.filter}')`);
-            else if (option.type === FILTER_OPTION_TYPE.byIndex)
-                strings.push(`.nth(${option.filter})`);
-            else if (option.type === FILTER_OPTION_TYPE.byTag)
-                strings.push(`.find('${option.filter}')`);
-            else if (option.type === FILTER_OPTION_TYPE.byAttr) {
-                const attrValueString = option.filter.attrValueRe ? `, ${option.filter.attrValueRe}` : '';
-
-                strings.push(`.withAttribute('${option.filter.attrName}'${attrValueString})`);
-            }
-        }
-
-        return strings;
-    }
-
     _getElements () {
         // NOTE: we should not check the receipt of an element for a selector
         // composed by tag tree because it cannot returns wrong result
@@ -128,13 +128,13 @@ export class SelectorDescriptor {
 
     static createFromInstance (descriptor, ancestorSelectorDescriptor) {
         return new SelectorDescriptor({
-            ruleType:                   descriptor.ruleType,
-            isCustomRule:               descriptor.isCustomRule,
-            element:                    descriptor.element,
             ancestorSelectorDescriptor: ancestorSelectorDescriptor,
             cssSelector:                descriptor.cssSelector,
-            filterOptions:              [].concat(descriptor.filterOptions || []),
+            element:                    descriptor.element,
             filter:                     descriptor.filter,
+            filterOptions:              [].concat(descriptor.filterOptions || []),
+            isCustomRule:               descriptor.isCustomRule,
+            ruleType:                   descriptor.ruleType,
         });
     }
 

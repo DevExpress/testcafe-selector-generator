@@ -19,11 +19,12 @@
         '    transportWorkerUrl: "{{{transportWorkerUrl}}}",',
         '    sessionId : "sessionId",',
         '    iframeTaskScriptTemplate: {{{iframeTaskScriptTemplate}}}',
-        '});'
+        '});',
     ].join('');
 
     window.Promise = hammerheadModule.Promise;
 
+    // eslint-disable-next-line max-params
     window.getIframeTaskScript = function (referer, serviceMsgUrl, location, cookie, transportWorkerUrl) {
         return iframeTaskScriptTempate
             .replace('{{{referer}}}', referer || '')
@@ -48,8 +49,8 @@
                 '    serviceMsgUrl: "' + serviceMsgUrl + '",',
                 '    transportWorkerUrl: "' + transportWorkerUrl + '",',
                 '    iframeTaskScriptTemplate: "' + iframeTaskScript + '",',
-                '    sessionId: "sessionId",' +
-                '});'
+                '    sessionId: "sessionId",',
+                '});',
             ].join(''));
         }
     };

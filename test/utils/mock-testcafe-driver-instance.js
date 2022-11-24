@@ -1,16 +1,14 @@
 (function () {
     window['%testCafeDriverInstance%'] = {
-        setCustomCommandHandlers: function () {
-            //do nothing
-        },
+        setCustomCommandHandlers: function () {},
+
         statusBar: {
             statusBar: {
-                addEventListener: function () {
-                },
+                addEventListener: function () {},
 
                 offsetHeight: 0,
-                offsetTop:    0
-            }
-        }
+                offsetTop:    0,
+            },
+        },
     };
 })();

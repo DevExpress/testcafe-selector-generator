@@ -1,6 +1,6 @@
 import TESTCAFE_CORE from '../deps/testcafe-core';
 import { BaseCreator } from './base-creator';
-import { RULE_TYPE } from '../selectors/rule-type';
+import { RULE_TYPE } from '../rules/rule-type';
 import { SelectorDescriptor } from '../selector-descriptor';
 import {
     getTagTreeFilterOptions, isHtmlOrBodyElement, getParentsUntil,
@@ -33,10 +33,10 @@ export class TagTreeSelectorCreator extends BaseCreator {
         let cssSelector   = '';
         let filterOptions = [];
 
-        if (!isHtmlOrBodyElement(this.element))
-            filterOptions = getTagTreeFilterOptions(this.element, this.parents);
-        else
+        if (isHtmlOrBodyElement(this.element))
             filterOptions.push(new FilterOption(FILTER_OPTION_TYPE.byTag, domUtils.getTagName(this.element)));
+        else
+            filterOptions = getTagTreeFilterOptions(this.element, this.parents);
 
         if (ancestorSelectorDescriptor) {
             return new SelectorDescriptor({

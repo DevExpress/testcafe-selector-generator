@@ -1,11 +1,10 @@
 import TESTCAFE_CORE from './deps/testcafe-core';
 
 import { findIndex } from './utils/find-index';
-import { RULE_TYPE } from './selectors/rule-type';
+import * as RULES from './rules';
 import { getParentsUntil } from './selector-creators/utils/tag-tree-utils';
 import { SelectorDescriptor } from './selector-descriptor';
 import { storeElementAttributes } from './selector-creators/utils/attributes-watcher';
-import * as DEFAULT_RULES from './utils/default-rules';
 import { SELECTOR_CREATORS } from './selector-creators';
 import { AttrSelectorCreator } from './selector-creators/attr-creator';
 import { CustomAttrSelectorCreator } from './selector-creators/custom-attr-creator';
@@ -18,11 +17,99 @@ const { domUtils, arrayUtils } = TESTCAFE_CORE;
 
 const MAX_DEFAULT_SELECTOR_COUNT = 10;
 
-export class SelectorGenerator {
-    static RULE_TYPE     = RULE_TYPE;
-    static DEFAULT_RULES = DEFAULT_RULES;
+function generateSelectorDescriptorsByCreators (el, selectorCreators, ancestorSelectorDescriptor) {
+    const selectorDescriptors = [];
 
-    constructor (rules = DEFAULT_RULES.DEFAULT_SELECTOR_RULES) {
+    for (const creator of selectorCreators) {
+        const selectorDescriptor = creator.create(el, ancestorSelectorDescriptor);
+
+        if (selectorDescriptor)
+            selectorDescriptors.push(selectorDescriptor);
+    }
+
+    return selectorDescriptors;
+}
+
+function getAncestorSelectorDescriptor (ancestors, ancestorSelectorCreator) {
+    for (const ancestor of ancestors) {
+        const ancestorSelectorDescriptor = ancestorSelectorCreator.create(ancestor);
+
+        if (ancestorSelectorDescriptor)
+            return ancestorSelectorDescriptor;
+    }
+
+    return null;
+}
+
+function generateAncestorSelectorDescriptorsByCreators (ancestors, selectorCreators) {
+    const selectorDescriptors = [];
+
+    for (const creator of selectorCreators) {
+        const selectorDescriptor = getAncestorSelectorDescriptor(ancestors, creator);
+
+        if (selectorDescriptor)
+            selectorDescriptors.push(selectorDescriptor);
+    }
+
+    return selectorDescriptors;
+}
+
+function removeRepetitiveSelectorDescriptors (selectorDescriptors) {
+    const resultSelectorDescriptors = [];
+
+    const repetitiveStringIndex = descriptor => findIndex(resultSelectorDescriptors, desc => {
+        return arrayUtils.join(desc.stringArray, '') === arrayUtils.join(descriptor.stringArray, '');
+    });
+
+    for (const descriptor of selectorDescriptors) {
+        const index = repetitiveStringIndex(descriptor);
+
+        if (index === -1)
+            resultSelectorDescriptors.push(descriptor);
+        else if (resultSelectorDescriptors[index].priority > descriptor.priority)
+            arrayUtils.splice(resultSelectorDescriptors, index, 1, descriptor);
+    }
+
+    return resultSelectorDescriptors;
+}
+
+function removeRedundantCompoundSelectorDescriptors (selectorDescriptors) {
+    const defaultRuleSelectors         = arrayUtils.filter(selectorDescriptors, descriptor => !descriptor.isCustom);
+    const defaultCompoundRuleSelectors = arrayUtils.filter(defaultRuleSelectors, descriptor => descriptor.ancestorSelectorDescriptor);
+
+    let compoundSelectorCount       = defaultCompoundRuleSelectors.length;
+    const elementSelectorCount      = defaultRuleSelectors.length - compoundSelectorCount;
+    const expectedCompoundRuleCount = MAX_DEFAULT_SELECTOR_COUNT - elementSelectorCount;
+
+    const getAncestorType = descriptor => {
+        return descriptor && descriptor.ancestorSelectorDescriptor ?
+            descriptor.ancestorSelectorDescriptor.ruleType : null;
+    };
+
+    let currentIndex = compoundSelectorCount - 1;
+
+    while (compoundSelectorCount > expectedCompoundRuleCount) {
+        const descriptor       = defaultCompoundRuleSelectors[currentIndex];
+        const ancestorRuleType = getAncestorType(descriptor);
+
+        while (getAncestorType(defaultCompoundRuleSelectors[currentIndex - 1]) === ancestorRuleType) {
+            arrayUtils.remove(selectorDescriptors, defaultCompoundRuleSelectors[currentIndex]);
+            compoundSelectorCount--;
+
+            if (compoundSelectorCount <= expectedCompoundRuleCount)
+                break;
+
+            currentIndex--;
+        }
+
+        currentIndex--;
+    }
+}
+
+export class SelectorGenerator {
+    static RULES = RULES;
+
+    constructor (rules = RULES.DEFAULT_SELECTOR_RULES) {
         this.rules = arrayUtils.filter(rules, rule => !rule.disabled);
 
         const { customRules, defaultRules } = SelectorGenerator._processRules(this.rules);
@@ -63,7 +150,6 @@ export class SelectorGenerator {
                 customRules.push(rule);
             else
                 defaultRules.push(rule);
-
         });
 
         return { customRules, defaultRules };
@@ -80,7 +166,7 @@ export class SelectorGenerator {
         const defaultCreators = [];
 
         arrayUtils.forEach(this.defaultRules, rule => {
-            const creator = rule.type === RULE_TYPE.byAttr ?
+            const creator = rule.type === RULES.RULE_TYPE.byAttr ?
                 new AttrSelectorCreator(this.customAttrNames) :
                 SELECTOR_CREATORS[rule.type];
 
@@ -96,7 +182,7 @@ export class SelectorGenerator {
 
         for (const rule of this.defaultRules) {
             if (isAncestorRuleCompoundable(rule)) {
-                if (rule.type === RULE_TYPE.byTagName)
+                if (rule.type === RULES.RULE_TYPE.byTagName)
                     this.ancestorSelectorCreators.push(new TagNameSelectorCreator(false));
                 else
                     this.ancestorSelectorCreators.push(SELECTOR_CREATORS[rule.type]);
@@ -104,46 +190,9 @@ export class SelectorGenerator {
         }
     }
 
-    _generateSelectorDescriptorsByCreators (el, selectorCreators, ancestorSelectorDescriptor) {
-        const selectorDescriptors = [];
-
-        for (const creator of selectorCreators) {
-            const selectorDescriptor = creator.create(el, ancestorSelectorDescriptor);
-
-            if (selectorDescriptor)
-                selectorDescriptors.push(selectorDescriptor);
-        }
-
-        return selectorDescriptors;
-    }
-
-    _getAncestorSelectorDescriptor (ancestors, ancestorSelectorCreator) {
-        for (const ancestor of ancestors) {
-            const ancestorSelectorDescriptor = ancestorSelectorCreator.create(ancestor);
-
-            if (ancestorSelectorDescriptor)
-                return ancestorSelectorDescriptor;
-        }
-
-        return null;
-    }
-
-    _generateAncestorSelectorDescriptorsByCreators (ancestors, selectorCreators) {
-        const selectorDescriptors = [];
-
-        for (const creator of selectorCreators) {
-            const selectorDescriptor = this._getAncestorSelectorDescriptor(ancestors, creator);
-
-            if (selectorDescriptor)
-                selectorDescriptors.push(selectorDescriptor);
-        }
-
-        return selectorDescriptors;
-    }
-
     _generateCompoundSelectorDescriptor (el, ancestors, elementSelectorDescriptors) {
         const compoundSelectorDescriptors = arrayUtils.filter(elementSelectorDescriptors, isSelectorDescriptorCompoundable);
-        const ancestorSelectorDescriptors = this._generateAncestorSelectorDescriptorsByCreators(ancestors, this.ancestorSelectorCreators);
+        const ancestorSelectorDescriptors = generateAncestorSelectorDescriptorsByCreators(ancestors, this.ancestorSelectorCreators);
 
         let selectorDescriptors = [];
         let descriptor          = null;
@@ -159,63 +208,11 @@ export class SelectorGenerator {
 
             //TODO: check ancestorDescriptor and ancestorSelectorDescriptor
             ancestorDescriptor  = SelectorDescriptor.createFromInstance(ancestorSelectorDescriptor);
-            descriptor          = this._generateSelectorDescriptorsByCreators(el, [SELECTOR_CREATORS[RULE_TYPE.byTagTree]], ancestorSelectorDescriptor);
+            descriptor          = generateSelectorDescriptorsByCreators(el, [SELECTOR_CREATORS[RULES.RULE_TYPE.byTagTree]], ancestorSelectorDescriptor);
             selectorDescriptors = arrayUtils.concat(selectorDescriptors, descriptor);
         }
 
         return selectorDescriptors;
-    }
-
-    _removeRepetitiveSelectorDescriptors (selectorDescriptors) {
-        const resultSelectorDescriptors = [];
-
-        const repetitiveStringIndex = descriptor => findIndex(resultSelectorDescriptors, desc => {
-            return arrayUtils.join(desc.stringArray, '') === arrayUtils.join(descriptor.stringArray, '');
-        });
-
-        for (const descriptor of selectorDescriptors) {
-            const index = repetitiveStringIndex(descriptor);
-
-            if (index === -1)
-                resultSelectorDescriptors.push(descriptor);
-            else if (resultSelectorDescriptors[index].priority > descriptor.priority)
-                arrayUtils.splice(resultSelectorDescriptors, index, 1, descriptor);
-        }
-
-        return resultSelectorDescriptors;
-    }
-
-    _removeRedundantCompoundSelectorDescriptors (selectorDescriptors) {
-        const defaultRuleSelectors         = arrayUtils.filter(selectorDescriptors, descriptor => !descriptor.isCustom);
-        const defaultCompoundRuleSelectors = arrayUtils.filter(defaultRuleSelectors, descriptor => descriptor.ancestorSelectorDescriptor);
-
-        let compoundSelectorCount       = defaultCompoundRuleSelectors.length;
-        const elementSelectorCount      = defaultRuleSelectors.length - compoundSelectorCount;
-        const expectedCompoundRuleCount = MAX_DEFAULT_SELECTOR_COUNT - elementSelectorCount;
-
-        const getAncestorType = descriptor => {
-            return descriptor && descriptor.ancestorSelectorDescriptor ?
-                descriptor.ancestorSelectorDescriptor.ruleType : null;
-        };
-
-        let currentIndex = compoundSelectorCount - 1;
-
-        while (compoundSelectorCount > expectedCompoundRuleCount) {
-            const descriptor       = defaultCompoundRuleSelectors[currentIndex];
-            const ancestorRuleType = getAncestorType(descriptor);
-
-            while (getAncestorType(defaultCompoundRuleSelectors[currentIndex - 1]) === ancestorRuleType) {
-                arrayUtils.remove(selectorDescriptors, defaultCompoundRuleSelectors[currentIndex]);
-                compoundSelectorCount--;
-
-                if (compoundSelectorCount <= expectedCompoundRuleCount)
-                    break;
-
-                currentIndex--;
-            }
-
-            currentIndex--;
-        }
     }
 
     _cleanAndSortDescriptors (selectorDescriptors) {
@@ -227,17 +224,16 @@ export class SelectorGenerator {
             const selectorType = SelectorGenerator._getSelectorType(descriptor);
             const priority     = this.rulePriority[selectorType];
 
-            if (priority === null)
-                continue;
-
-            descriptor.priority = priority;
-            result.push(descriptor);
+            if (priority !== null) {
+                descriptor.priority = priority;
+                result.push(descriptor);
+            }
         }
 
-        result = this._removeRepetitiveSelectorDescriptors(result);
+        result = removeRepetitiveSelectorDescriptors(result);
         result = result.sort(SelectorGenerator._priorityComparator);
 
-        this._removeRedundantCompoundSelectorDescriptors(result);
+        removeRedundantCompoundSelectorDescriptors(result);
 
         return result;
     }
@@ -256,7 +252,7 @@ export class SelectorGenerator {
     }
 
     generateDescriptors (el) {
-        const elementSelectorDescriptors  = this._generateSelectorDescriptorsByCreators(el, this.elementSelectorCreators);
+        const elementSelectorDescriptors  = generateSelectorDescriptorsByCreators(el, this.elementSelectorCreators);
         const ancestors                   = getParentsUntil(el, domUtils.findDocument(el).body);
         const compoundSelectorDescriptors = this._generateCompoundSelectorDescriptor(el, ancestors, elementSelectorDescriptors);
 

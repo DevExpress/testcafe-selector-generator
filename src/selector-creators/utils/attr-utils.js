@@ -20,17 +20,19 @@ const MAX_TEXT_LENGTH_IN_SELECTOR = 50;
 
 export const CLASS_ATTRIBUTE_NAME = 'class';
 
+// eslint-disable-next-line max-params
 export function getRegExpAttributesDescriptor (ruleType, el, cssSelector, filterRegExpValue, ancestorSelectorDescriptor) {
     return new SelectorDescriptor({
-        ruleType:                   ruleType,
-        element:                    el,
         ancestorSelectorDescriptor: ancestorSelectorDescriptor,
         cssSelector:                cssSelector,
-        filterOptions:              new FilterOption(FILTER_OPTION_TYPE.byAttr, filterRegExpValue),
+        element:                    el,
         filter:                     getAttributeRegExpFilter(filterRegExpValue),
+        filterOptions:              new FilterOption(FILTER_OPTION_TYPE.byAttr, filterRegExpValue),
+        ruleType:                   ruleType,
     });
 }
 
+// eslint-disable-next-line max-lines-per-function, max-params
 export function getAttributesDescriptor (ruleType, el, attributes, ancestorSelectorDescriptor) {
     const tagName        = domUtils.getTagName(el);
     let cssSelector      = '';
@@ -72,7 +74,6 @@ export function getAttributesDescriptor (ruleType, el, attributes, ancestorSelec
                 cssSelector += (' ' + value).replace(/\s+/g, '.');
             else
                 cssSelector += `[${name}${valueWasCut ? '^' : ''}${value ? `="${value}"` : ''}]`;
-
         }
     });
 

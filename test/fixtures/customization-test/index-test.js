@@ -1,12 +1,11 @@
-/*global getSelector*/
+/* global getSelector */
 const hammerhead     = window.getTestCafeModule('hammerhead');
 const INTERNAL_ATTRS = hammerhead.PROCESSING_INSTRUCTIONS.dom.internal_attributes;
 const INTERNAL_PROPS = hammerhead.PROCESSING_INSTRUCTIONS.dom.internal_props;
 
 const SelectorGenerator = window.getTestCafeModule('SelectorGenerator');
-const selectorGenerator = new SelectorGenerator();
 
-const { RULE_TYPE, DEFAULT_SELECTOR_RULES, CustomSelectorRule, SelectorRule } = SelectorGenerator.DEFAULT_RULES;
+const { RULE_TYPE, DEFAULT_SELECTOR_RULES, CustomSelectorRule, SelectorRule } = SelectorGenerator.RULES;
 
 const CUSTOM_ATTR_NAME    = 'cust-attr';
 const DATA_TEST_ATTR_NAME = 'data-test';
@@ -37,6 +36,17 @@ function stopIgnoreQUnitElements () {
     }
 }
 
+function createSelectorGenerator (customAtrNames) {
+    if (!customAtrNames)
+        return new SelectorGenerator();
+
+    const customRues = customAtrNames.map(function (attrName) {
+        return new CustomSelectorRule(attrName);
+    });
+
+    return new SelectorGenerator(customRues.concat(DEFAULT_SELECTOR_RULES));
+}
+
 const originSelectorGenerator = createSelectorGenerator();
 const customSelectorGenerator = createSelectorGenerator(CUSTOM_ATTRIBUTES);
 
@@ -53,17 +63,6 @@ function generateSelectors (element, generator) {
     return selectors;
 }
 
-function createSelectorGenerator (customAtrNames) {
-    if (!customAtrNames)
-        return new SelectorGenerator();
-
-    const customRues = customAtrNames.map(function (attrName) {
-        return new CustomSelectorRule(attrName);
-    });
-
-    return new SelectorGenerator(customRues.concat(DEFAULT_SELECTOR_RULES));
-}
-
 module('using custom attr generation rule');
 
 test('element with custom attribute', function () {
@@ -72,7 +71,7 @@ test('element with custom attribute', function () {
 
     deepEqual(selectors, [
         getSelector("Selector('ins').withText('text')", RULE_TYPE.byText),
-        getSelector("Selector('ins')", RULE_TYPE.byTagTree)
+        getSelector("Selector('ins')", RULE_TYPE.byTagTree),
     ]);
 
     selectors = generateSelectors(insElement);
@@ -80,7 +79,7 @@ test('element with custom attribute', function () {
     deepEqual(selectors, [
         getSelector("Selector('[cust-attr=\"cust-attr value\"]')", CUSTOM_ATTR_NAME),
         getSelector("Selector('ins').withText('text')", RULE_TYPE.byText),
-        getSelector("Selector('ins')", RULE_TYPE.byTagTree)
+        getSelector("Selector('ins')", RULE_TYPE.byTagTree),
     ]);
 });
 
@@ -90,7 +89,7 @@ test('element without custom attribute', function () {
     deepEqual(generateSelectors(legend), [
         getSelector("Selector('legend').withText('without custom attr')", RULE_TYPE.byText),
         getSelector("Selector('[title=\"title\"]')", RULE_TYPE.byAttr),
-        getSelector("Selector('legend')", RULE_TYPE.byTagTree)
+        getSelector("Selector('legend')", RULE_TYPE.byTagTree),
     ]);
 });
 
@@ -102,7 +101,7 @@ test('use common attr as custom', function () {
         getSelector("Selector('ins').withText('ins')", RULE_TYPE.byText),
         getSelector("Selector('.class-name')", RULE_TYPE.byClassAttr),
         getSelector("Selector('[title=\"ins with title\"]')", RULE_TYPE.byAttr),
-        getSelector("Selector('ins').nth(1)", RULE_TYPE.byTagTree)
+        getSelector("Selector('ins').nth(1)", RULE_TYPE.byTagTree),
     ]);
 
     selectors = generateSelectors(insElement, createSelectorGenerator(['title']));
@@ -111,7 +110,7 @@ test('use common attr as custom', function () {
         getSelector("Selector('[title=\"ins with title\"]')", 'title'),
         getSelector("Selector('ins').withText('ins')", RULE_TYPE.byText),
         getSelector("Selector('.class-name')", RULE_TYPE.byClassAttr),
-        getSelector("Selector('ins').nth(1)", RULE_TYPE.byTagTree)
+        getSelector("Selector('ins').nth(1)", RULE_TYPE.byTagTree),
     ]);
 });
 
@@ -124,7 +123,7 @@ test('custom attribute value with regexp', function () {
     deepEqual(generateSelectors(button), [
         getSelector("Selector('button').withAttribute('cust-attr', /some\\s+value with spaces/)", CUSTOM_ATTR_NAME),
         getSelector("Selector('button').withText('button1')", RULE_TYPE.byText),
-        getSelector("Selector('button')", RULE_TYPE.byTagTree)
+        getSelector("Selector('button')", RULE_TYPE.byTagTree),
     ]);
 });
 
@@ -134,7 +133,7 @@ test('custom attribute with no value', function () {
     deepEqual(generateSelectors(button), [
         getSelector("Selector('[cust-attr]').nth(2)", CUSTOM_ATTR_NAME),
         getSelector("Selector('button').withText('button2')", RULE_TYPE.byText),
-        getSelector("Selector('button').nth(1)", RULE_TYPE.byTagTree)
+        getSelector("Selector('button').nth(1)", RULE_TYPE.byTagTree),
     ]);
 });
 
@@ -148,7 +147,7 @@ test('element with several common attributes', function () {
         getSelector("Selector('[cust-attr]').nth(3)", CUSTOM_ATTR_NAME),
         getSelector("Selector('.some-class')", RULE_TYPE.byClassAttr),
         getSelector("Selector('[title=\"div-some-title\"]')", RULE_TYPE.byAttr),
-        getSelector("Selector('div')", RULE_TYPE.byTagTree)
+        getSelector("Selector('div')", RULE_TYPE.byTagTree),
     ]);
 });
 
@@ -173,7 +172,7 @@ test('TestCafe and Google Analytics attributes', function () {
         getSelector("Selector('[cust-attr]').nth(4)", CUSTOM_ATTR_NAME),
         getSelector("Selector('.tc-hh-some-class')", RULE_TYPE.byClassAttr),
         getSelector("Selector('[title=\"tc-hh-some-title\"]')", RULE_TYPE.byAttr),
-        getSelector("Selector('div').nth(1)", RULE_TYPE.byTagTree)
+        getSelector("Selector('div').nth(1)", RULE_TYPE.byTagTree),
     ]);
 
     selectors = generateSelectors(div, createSelectorGenerator(CUSTOM_ATTRIBUTES.concat([hammerheadDataHoverAttr, gaAttrName])));
@@ -184,7 +183,7 @@ test('TestCafe and Google Analytics attributes', function () {
         getSelector("Selector('[data-ga-click=\"(Logged out) Header, clicked Sign up, text:sign-up\"]')", 'data-ga-click'),
         getSelector("Selector('.tc-hh-some-class')", RULE_TYPE.byClassAttr),
         getSelector("Selector('[title=\"tc-hh-some-title\"]')", RULE_TYPE.byAttr),
-        getSelector("Selector('div').nth(1)", RULE_TYPE.byTagTree)
+        getSelector("Selector('div').nth(1)", RULE_TYPE.byTagTree),
     ]);
 });
 
@@ -196,7 +195,7 @@ test('elements with several common and custom attributes', function () {
         getSelector("Selector('[data-test=\"123\"]')", DATA_TEST_ATTR_NAME),
         getSelector("Selector('.some-class').nth(1)", RULE_TYPE.byClassAttr),
         getSelector("Selector('[title=\"some-title\"]')", RULE_TYPE.byAttr),
-        getSelector("Selector('label')", RULE_TYPE.byTagTree)
+        getSelector("Selector('label')", RULE_TYPE.byTagTree),
     ]);
 
     deepEqual(generateSelectors(labels[1]), [
@@ -204,7 +203,7 @@ test('elements with several common and custom attributes', function () {
         getSelector("Selector('[data-test]').nth(1)", DATA_TEST_ATTR_NAME),
         getSelector("Selector('#id123')", RULE_TYPE.byId),
         getSelector("Selector('.some.class')", RULE_TYPE.byClassAttr),
-        getSelector("Selector('label').nth(1)", RULE_TYPE.byTagTree)
+        getSelector("Selector('label').nth(1)", RULE_TYPE.byTagTree),
     ]);
 });
 
@@ -218,7 +217,7 @@ test('elements with parents', function () {
         getSelector("Selector('[cust-attr=\"some attr\"]')", CUSTOM_ATTR_NAME),
         getSelector("Selector('#parent-with-id [cust-attr=\"some attr\"]')", CUSTOM_ATTR_NAME, RULE_TYPE.byId),
         getSelector("Selector('#parent-with-id span')", RULE_TYPE.byTagTree, RULE_TYPE.byId),
-        getSelector("Selector('div').nth(2).find('span')", RULE_TYPE.byTagTree)
+        getSelector("Selector('div').nth(2).find('span')", RULE_TYPE.byTagTree),
     ]);
 
     span = document.querySelector('.parent-with-class > span');
@@ -229,7 +228,7 @@ test('elements with parents', function () {
         getSelector("Selector('.parent-with-class [data-test=\"some data attr\"]')", DATA_TEST_ATTR_NAME, RULE_TYPE.byClassAttr),
         getSelector("Selector('.parent-with-class .child-class')", RULE_TYPE.byClassAttr, RULE_TYPE.byClassAttr),
         getSelector("Selector('.parent-with-class span')", RULE_TYPE.byTagTree, RULE_TYPE.byClassAttr),
-        getSelector("Selector('div').nth(3).find('span')", RULE_TYPE.byTagTree)
+        getSelector("Selector('div').nth(3).find('span')", RULE_TYPE.byTagTree),
     ]);
 });
 
@@ -248,7 +247,7 @@ test('parent with custom attributes', function () {
         getSelector("Selector('[title=\"parent-with-title\"] [data-test=\"child data test\"]')", DATA_TEST_ATTR_NAME, RULE_TYPE.byAttr),
         getSelector("Selector('[title=\"parent-with-title\"] .span.class')", RULE_TYPE.byClassAttr, RULE_TYPE.byAttr),
         getSelector("Selector('[title=\"parent-with-title\"] span')", RULE_TYPE.byTagTree, RULE_TYPE.byAttr),
-        getSelector("Selector('div').nth(4).find('span')", RULE_TYPE.byTagTree)
+        getSelector("Selector('div').nth(4).find('span')", RULE_TYPE.byTagTree),
     ]);
 });
 
@@ -265,7 +264,7 @@ test('element without custom attributes', function () {
     deepEqual(generateSelectors(strongElement), [
         getSelector("Selector('strong').withText('strong text')", RULE_TYPE.byText),
         getSelector("Selector('.strong-class')", RULE_TYPE.byClassAttr),
-        getSelector("Selector('strong')", RULE_TYPE.byTagTree)
+        getSelector("Selector('strong')", RULE_TYPE.byTagTree),
     ]);
 
     customSelectorGenerator.storeElementAttributes(strongElement);
@@ -275,7 +274,7 @@ test('element without custom attributes', function () {
         getSelector("Selector('[data-test=\"legend-data-test\"]')", DATA_TEST_ATTR_NAME),
         getSelector("Selector('strong').withText('strong text')", RULE_TYPE.byText),
         getSelector("Selector('.strong-class')", RULE_TYPE.byClassAttr),
-        getSelector("Selector('strong')", RULE_TYPE.byTagTree)
+        getSelector("Selector('strong')", RULE_TYPE.byTagTree),
     ]);
 });
 
@@ -291,7 +290,7 @@ test('element with custom attributes', function () {
         getSelector("Selector('[data-test=\"q-data-test\"]')", DATA_TEST_ATTR_NAME),
         getSelector("Selector('.q.class')", RULE_TYPE.byClassAttr),
         getSelector("Selector('[title=\"q-title\"]')", RULE_TYPE.byAttr),
-        getSelector("Selector('q')", RULE_TYPE.byTagTree)
+        getSelector("Selector('q')", RULE_TYPE.byTagTree),
     ]);
 
     customSelectorGenerator.storeElementAttributes(qElement);
@@ -302,7 +301,7 @@ test('element with custom attributes', function () {
         getSelector("Selector('[data-test=\"q-data-test\"]')", DATA_TEST_ATTR_NAME),
         getSelector("Selector('.q.class')", RULE_TYPE.byClassAttr),
         getSelector("Selector('[title=\"q-title\"]')", RULE_TYPE.byAttr),
-        getSelector("Selector('q')", RULE_TYPE.byTagTree)
+        getSelector("Selector('q')", RULE_TYPE.byTagTree),
     ]);
 });
 
@@ -318,7 +317,7 @@ test('use common attribute as custom', function () {
         getSelector("Selector('[alt=\"some alt\"]')", 'alt'),
         getSelector("Selector('[data-test=\"img-data-test\"]')", DATA_TEST_ATTR_NAME),
         getSelector("Selector('.imgclass')", RULE_TYPE.byClassAttr),
-        getSelector("Selector('img')", RULE_TYPE.byTagTree)
+        getSelector("Selector('img')", RULE_TYPE.byTagTree),
     ]);
 
     selectorGenerator.storeElementAttributes(img);
@@ -326,7 +325,7 @@ test('use common attribute as custom', function () {
     deepEqual(generateSelectors(img, selectorGenerator), [
         getSelector("Selector('[data-test=\"img-data-test\"]')", DATA_TEST_ATTR_NAME),
         getSelector("Selector('.imgclass')", RULE_TYPE.byClassAttr),
-        getSelector("Selector('img')", RULE_TYPE.byTagTree)
+        getSelector("Selector('img')", RULE_TYPE.byTagTree),
     ]);
 });
 
@@ -340,7 +339,7 @@ test('default rule priority', function () {
     deepEqual(generateSelectors(element, generator), [
         getSelector("Selector('#id123')", RULE_TYPE.byId),
         getSelector("Selector('.some.class')", RULE_TYPE.byClassAttr),
-        getSelector("Selector('label').nth(1)", RULE_TYPE.byTagTree)
+        getSelector("Selector('label').nth(1)", RULE_TYPE.byTagTree),
     ]);
 });
 
@@ -349,7 +348,7 @@ test('custom rule priority', function () {
     const generator = new SelectorGenerator([
         new SelectorRule(RULE_TYPE.byClassAttr),
         new SelectorRule(RULE_TYPE.byTagTree),
-        new SelectorRule(RULE_TYPE.byId)
+        new SelectorRule(RULE_TYPE.byId),
     ]);
 
     const selectors = generateSelectors(element, generator);
@@ -357,7 +356,7 @@ test('custom rule priority', function () {
     deepEqual(selectors, [
         getSelector("Selector('.some.class')", RULE_TYPE.byClassAttr),
         getSelector("Selector('label').nth(1)", RULE_TYPE.byTagTree),
-        getSelector("Selector('#id123')", RULE_TYPE.byId)
+        getSelector("Selector('#id123')", RULE_TYPE.byId),
     ]);
 });
 
@@ -368,7 +367,7 @@ test('differ custom attributes priority', function () {
         new SelectorRule(RULE_TYPE.byClassAttr),
         new CustomSelectorRule(CUSTOM_ATTRIBUTES[1]),
         new SelectorRule(RULE_TYPE.byId),
-        new SelectorRule(RULE_TYPE.byTagTree)
+        new SelectorRule(RULE_TYPE.byTagTree),
     ]);
 
     const selectors = generateSelectors(element, generator);
@@ -378,7 +377,7 @@ test('differ custom attributes priority', function () {
         getSelector("Selector('.some.class')", RULE_TYPE.byClassAttr),
         getSelector("Selector('[data-test]').nth(2)", DATA_TEST_ATTR_NAME),
         getSelector("Selector('#id123')", RULE_TYPE.byId),
-        getSelector("Selector('label').nth(1)", RULE_TYPE.byTagTree)
+        getSelector("Selector('label').nth(1)", RULE_TYPE.byTagTree),
     ]);
 });
 
@@ -416,6 +415,6 @@ test('custom selector should not be limited, only 10 default selectors can be ge
         getSelector("Selector('[title=\"ancestorDivWithAttr\"] [cust-attr=\"test1\"]')", CUSTOM_ATTR_NAME, RULE_TYPE.byAttr),
         getSelector("Selector('[title=\"ancestorDivWithAttr\"] div').withText('bla bla text').nth(2)", RULE_TYPE.byText, RULE_TYPE.byAttr),
 
-        getSelector("Selector('div').nth(5).find('div div div')", RULE_TYPE.byTagTree)
+        getSelector("Selector('div').nth(5).find('div div div')", RULE_TYPE.byTagTree),
     ]);
 });
