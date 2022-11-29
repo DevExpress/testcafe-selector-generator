@@ -860,7 +860,7 @@ test('selector contains unescaped symbols - gh1190', function () {
     deepEqual(generateSelectors(link), [
         getSelector("Selector('a').withText('Temp')", RULE_TYPE.byText),
         getSelector("Selector('[class^=\"link link_theme_normal organic__url link_cropped_n\"]')", RULE_TYPE.byClassAttr),
-        getSelector("Selector('[data-bem=\"{\\\\\"link\\\\\":{}}\"][data-log-node=\"uniq15199824464503338163\"][data-counter^=\"[\\\\\"rc\\\\\",\\\\\"http://yandex.ru/clck/jsredir?from=yandex.r\"]')", RULE_TYPE.byAttr),
+        getSelector("Selector('[data-bem=\"{\\\\\"link\\\\\":{}}\"][data-log-node=\"uniq15199824464503338163\"][data-counter^=\"[\\\\\"rc\\\\\",\\\\\"http://google.com/clck/jsredir?from=google.\"]')", RULE_TYPE.byAttr),
         getSelector("Selector('a').nth(1)", RULE_TYPE.byTagTree),
     ]);
 });
