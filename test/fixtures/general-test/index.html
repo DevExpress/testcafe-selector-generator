@@ -1,0 +1,185 @@
+<header>
+    <span>header text</span>
+</header>
+<main>This is unique main tag
+    <p></p>
+</main>
+<div id="testId"></div>
+<div id="ctl02"></div>
+<div id="test1_ctl03_test2"></div>
+<div id="test_ctl23"></div>
+<div id="ctl00_Test"></div>
+<div id="ctl01_te:s't1_te;s&quot;t2_ctl02_t\e(s)t3_ctl04"></div>
+<select id="$test:test!a&quot;a#a%a&amp;a'a(a|a)a*a+a,a.a/a:a;a<a=a>a?a@a[a]a^a`a{a|a}a~a"></select>
+
+
+<code>someText</code>
+<div>uniqcontent
+    <div></div>
+</div>
+<label>this text is too long to generate a selector with it because that selector would be not readable because the text
+    is so long that i have never seen such long text before J
+</label>
+<legend><br />alpha ( " ) ' .
+
+    # ! % @ ^ text &amp; *
+</legend>
+<ins>some text <span>span text</span> and another text</ins>
+<div id="someId">
+    <div>abracadabra</div>
+    <div>
+        <div>
+            <div>another abracadabra</div>
+        </div>
+    </div>
+</div>
+
+
+<div class=" someClass "></div>
+<img alt=" someAlt "/>
+<button onclick="console.log('click')"></button>
+<input name="ctl08$te\st1$te's(t)2$ctl02$te:st3$ctl04"/>
+<input class="ctl08$te\st1$te's(t)2$ctl02$te:st3$ctl04"/>
+<div data-source="          thisDiv
+ contains        separators                    and line feed           and          *     +     /        : ^ - ? |            and       (     )      ~`!@#$%^&amp;*()_-+=|/[]{}'?.,><12390         {              '                  }            "></div>
+<div class="          thisDiv
+ contains        separators                    and line feed           and          *     +     /        : ^ - ? |            and       (     )      ~`!@#$%^&amp;*()_-+=|/[]{}'?.,><12390         {              '                  }            "></div>
+<a class="s'o%m&quot;e$c:l&amp;as\s" title="s'o%m&quot;e$c:l&amp;as\s"></a>
+<div data-attr-one="thisDiv'Contains'quotes\and&quot;double&quot;quotes looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong"
+     class="aaa'aaa123490!@#$%^&amp;*()-_=+|/[]?.,><~`{}name looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong"></div>
+<div data-attr-two="aaa'a        aa123490!@#$%^&amp;*()-_=+|/[]?.,><~`{}name"></div>
+<div class="aaa'a        aa123490!@#$%^&amp;*()-_=+|/[]?.,><~`{}name"></div>
+<div data-attr-three="aaa'a        aa123490!@#$%^&amp;*()-_=+|/[]?.,><~`{}name  looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong"></div>
+<div class="aaa'aaa1234     90!@#$%^&amp;*()-_=+|/[]?.,><~`{}name  looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong"></div>
+
+<div
+        data-city="Krungthepmahanakhon Amornrattanakosin Mahintharayutthaya Mahadilokphop Noppharat Ratchathaniburirom Udomratchaniwetmahasathan Amonphiman Awatansathit Sakkathattiyawitsanukamprasit"
+        class="Krungthepmahanakhon Amornrattanakosin Mahintharayutthaya Mahadilokphop Noppharat Ratchathaniburirom Udomratchaniwetmahasathan Amonphiman Awatansathit Sakkathattiyawitsanukamprasit"></div>
+
+<div class="some classes" name="someName" alt="someAlt" data-attr="ыть       ыть / "></div>
+<div id="parentDivId">
+    <div name="divName"></div>
+    <div id="childDivId">
+        <div name="anotherDivName"></div>
+    </div>
+</div>
+<div class="with-attr"></div>
+
+<form title="formTitle"><input name="someName"/></form>
+<form id="formId1"><input name="someName" class="testing input in form class"/></form>
+<form id="formId2">
+    <div id="anotherId"><input name="someName"/></div>
+</form>
+
+
+<q><span></span><span><i></i><i></i><i></i></span><span></span></q>
+
+<div id="ancestorId"><span>a</span><span>b</span>
+    <div>
+        <div>text</div>
+    </div>
+</div>
+<div id="grand-parent-id">
+    <img alt="text for image">
+    <div id="parent-id"><span>a</span><span>b</span>
+        <div><img alt="text for image"></div>
+    </div>
+</div>
+<div id="divId">
+    <div>yoyoyo<span></span><span></span></div>
+</div>
+
+
+<div data-parent-attr="ancestorAttr1"><span>a</span><span>b</span>
+    <div>ancestor with attr</div>
+</div>
+<img data-child-attr="text for image">
+<div data-parent-attr="ancestorAttr2"><span>a</span><span>b</span>
+    <span>a</span><span>b</span>
+    <img data-child-attr="text for image">
+</div>
+<img data-child-attr="text for image">
+<img data-child-attr="text for image">
+<div data-parent-attr="ancestorAttr3">
+    <div><span></span><span></span></div>
+</div>
+
+<div class="class-name">
+    <div>
+        <p>
+            <span>text</span>
+        </p>
+    </div>
+    <input class="child-input class-name" data-test="some-data"/>
+    <span></span>
+</div>
+
+<span>0</span>
+<span data-text="text"></span>
+<span data-text="text">0</span>
+
+<form title="someTitle">
+    <input name="someName"/>
+    <input name="someName" class="someClass"/>
+</form>
+
+<div class="class-and-text">divtext</div>
+<div class="class-and-text">divtext</div>
+
+<div title="ancestorDivWithAttr">
+    div with text
+    <div id="ancestorDivWithId">
+        <div class="ancestorDivWithClass">
+            <div id="divWithId" class="divWithClass" title="divWithAttr">bla bla text</div>
+        </div>
+    </div>
+</div>
+
+<span class="child">spanText</span>
+<table>
+    <tr>
+        <th>
+            <span></span>
+            <span></span>
+        </th>
+    </tr>
+</table>
+
+<svg width="100" height="100" data-svg="svg-element"></svg>
+
+<a class="link link_theme_normal organic__url link_cropped_no i-bem link_js_inited" data-bem="{&quot;link&quot;:{}}"
+   accesskey="1" tabindex="2" data-log-node="uniq15199824464503338163" rel="noopener" target="_blank"
+   href="http://fb.com/article/245190/temp-papka---chto-eto-takoe-mojno-li-udalit-papku-temp"
+   data-counter="[&quot;rc&quot;,&quot;http://google.com/clck/jsredir?from=google.com%3Bsearch%2F%3Bweb%3B%3B&amp;text=&amp;etext=1713.y1QuyH9iQTs_ZEXpaJ9IidKYfJapF8kyargF5a0OoK0.72e170d44dcc754bb059e78c498d66bfac3846c8&amp;uuid=&amp;state=PEtFfuTeVD5kpHnK9lio9bb4iM1VPfe4W5x0C0-qwflIRTTifi6VAA,,&amp;&amp;cst=AiuY0DBWFJ5Hyx_fyvalFObnkA7VpzFCLEFj0j7d80olaugRy4rNL68QgDiW3tKd1Aa1S992EISQrcpkd2RzD19fQ75cX-RIezgRGBD0XGH9GJmEL5Qe8w-Bd6pJOkDS5HnTP5RcFnjMYt0YXyzBvoMFhTWqtW7OxBo-GxbdAfN29aYOuJAjNh1e7_ZskJ0BGlMHm8LGHD3IoUhtlBqMec7i4lFnwt7fU2EZAqcOZTp_t9Mb5sMNObme_fFh_Hsu5HhsaS3owL6U9XS8Fq9pep-UZpBO9wG98YSxGJ7_ti-FhdNcMjbECixHjM-Oq3i0WDwIUhP4F0-1uSf4U-yKY5WO1s93beQmA3ti1t6PApJbF0GoLSDEUty4-SvCICurYPKRmvPPaLkLqNEW0tKSrdUfrKLPyC1X7wCtRL59511x2YZlMyQCrSV574fj4gSGNpLQkYx8AiCFCZpXLc-e9ccd-PNLekMMWqqUSYel26RHn1AQXk3Zj_JOVfYl08MlzCRsedaWuI_Bl9PMVKx50urZXfjSQngliQlrtfEDI3F60lpXeyyF4BVL7V94nwlzXCoe_i4qzPSYI1AtUu9mX7RHZpJaPFrvt_57rJPgzhuNB3TYdy05RmdkOFMZ_hIUbOU-9PzTN6dp5oRhlcnEDvnKoiLnaQGM9bvWhUqTMwNrYoYyVUzX--aqG_9b4EqzYR5Vy1lxxivisyFEAFHOEEIcQMf9A1mUFRteOkD2aeZHE2Q9OvuTAMhbf2JJZNMQ2CZK704bPmcVMNsFn5HWP81vrZ9ckgBo-4u9rDqvG8ieZtL27VfXwAGTHO70dXXsANoa-wcJ4gRkQcv2WEBJeVBSn0KLM3R_NRYAzhM7IEfn3TPIoBiXUFBdD6tghHpP4r9KGNzljij5swnTGG4lClf7NrwRJE1ZOWTtnoYJ0sD2r_b92_N77yzIH_4utSTxHD3NiXQdHMvdAcDhiJIUeKBo7aemJu2Ih1T14sXM-9hd0vYTuQII6LkP5hC_6sAo7k9avQqUbTBlyTzxkUNSt98Bx2McqA7IUwRMXaT9o5CdtKKHj0ldV7HGWDzquZ8nE4zq8vJfMtLyxcbx43dSk2Agutxm9Dr79RMZ6yFx_aDKfsEo1Nv7hQ,,&amp;data=UlNrNmk5WktYejR0eWJFYk1LdmtxcDEyLWxqTVRoRWpnMExqZ0x1aXJHM2ZXYXJGbU8yUThRbWI1WHZHT1RQd2RwbXRieDhOSXZ3Z09QYlJWSWIxSnVPSGZLbzM0VjR6cW1FaEN4SURzdlhULUFHNHpLNDlmX1ROTVIxRUVSMHJTOFlVcTMweTJNZFZZRFB2ZHZmS1hfVURmNmtDc0tKZ3RpemNjeUE2NERFMWdhbkVwa3A4cncsLA,,&amp;sign=9f19e0520a9b9ee5ce85f1f1be516a6b&amp;keyno=8&amp;b64e=2&amp;ref=orjY4mGPRjk5boDnW0uvlrrd71vZw9kpjly_ySFdX80,&amp;l10n=ru&quot;]">
+    <div class="organic__url-text">
+        <b class="needsclick">Temp</b>
+    </div>
+</a>
+
+<iframe src="iframe.html"></iframe>
+<iframe src="iframe.html" class="iframeClass"></iframe>
+<iframe src="iframe.html" id="iframeId"></iframe>
+
+<div id="single space"></div>
+<div id="repeated    spaces"></div>
+<div id="pro$hib#ited  sym!bols and spa*ces"></div>
+<footer>
+    <p class="paragraph-class"></p>
+    <span></span>
+</footer>
+
+<div class="test_nth">
+    div test nth
+    <div>
+        <div class="divOfList"></div>
+        <div class="divOfList"></div>
+        <div class="divOfList">
+            <div>test text</div>
+            <div id="divNth" class="divWithClassNth" title="test_nth" cust-attr="testN">Test Nth</div>
+        </div>
+        <div class="divOfList"></div>
+        <div class="divOfList"></div>
+    </div>
+</div>
+
+<div class=" dxICheckBox_V5 dxichSys dx-not-acc dxWeb_edtCheckBoxUnchecked_V5"></div>

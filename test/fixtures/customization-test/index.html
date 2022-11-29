@@ -1,0 +1,43 @@
+<legend title="title">without custom attr</legend>
+<strong class="strong-class">strong text</strong>
+
+<ins cust-attr="cust-attr value">text</ins>
+<ins class="class-name" title="ins with title">ins</ins>
+
+<button cust-attr="some                    value with spaces">button1</button>
+<button cust-attr>button2</button>
+
+<div class="some-class" title="div-some-title" name cust-attr></div>
+<div class="tc-hh-some-class" title="tc-hh-some-title" name cust-attr></div>
+
+<label class="some-class" title="some-title" data-test="123"
+       cust-attr="value                  with spaces"></label>
+<label cust-attr="label cust-attr value" data-test class="some class" id="id123"></label>
+
+<div id="parent-with-id">
+    <span cust-attr="some attr"></span>
+</div>
+
+<div class="parent-with-class">
+    <span data-test="some data attr" class="child-class"></span>
+</div>
+
+<div cust-attr="parent with cust attr" title="parent-with-title" class="parent-class">
+    <span data-test="child data test" class="span class"></span>
+</div>
+
+<q class="q class" title="q-title" data-test="q-data-test" cust-attr></q>
+<img class="imgclass" alt="some alt" data-test="img-data-test" cust-attr="img cust">i text</img>
+
+<form title="form with title" data-test cust-attr="firm with custom attr">
+    <input name="input with name" data-test="input data attr"/>
+</form>
+
+<div title="ancestorDivWithAttr">
+    div with text
+    <div id="ancestorDivWithId" cust-attr="grand-parent">
+        <div class="ancestorDivWithClass" >
+            <div id="divWithId" class="divWithClass" title="divWithAttr" cust-attr="test1">bla bla text</div>
+        </div>
+    </div>
+</div>
