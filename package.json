@@ -8,8 +8,8 @@
   },
   "main": "src/index.js",
   "scripts": {
-    "test": "node node_modules/gulp/bin/gulp.js test",
-    "lint": "node node_modules/eslint/bin/eslint.js ."
+    "test": "gulp test",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
