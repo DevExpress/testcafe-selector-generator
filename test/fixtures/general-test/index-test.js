@@ -311,8 +311,8 @@ test('element with attr with too long value', function () {
 test('element with attr with too long value and starts with a space', function () {
     const element       = document.querySelector('[class=" dxICheckBox_V5 dxichSys dx-not-acc dxWeb_edtCheckBoxUnchecked_V5"');
     const selectors     = generateSelectors(element);
-    const selector      = selectors.find(sel => sel.ruleType === RULE_TYPE.byClassAttr);
-    const selectorValue = selector.rawSelector.value;
+    const selector      = selectors.find(sel => sel.rules.includes(RULE_TYPE.byClassAttr));
+    const selectorValue = selector.value;
     const cssSelector   = selectorValue.match(/\[.*\]/)[0];
 
     strictEqual(document.querySelector(cssSelector), element);
