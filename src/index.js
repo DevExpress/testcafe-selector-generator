@@ -271,16 +271,13 @@ export class SelectorGenerator {
                 const { stringArray, ruleType, ancestorSelectorDescriptor } = selectorDescriptor;
 
                 const selector = {
-                    rawSelector: {
-                        type:  'js-expr',
-                        value: arrayUtils.join(stringArray, ''),
-                    },
+                    value: arrayUtils.join(stringArray, ''),
 
-                    ruleType,
+                    rules: [ruleType],
                 };
 
                 if (ancestorSelectorDescriptor)
-                    selector.ancestorRuleType = ancestorSelectorDescriptor.ruleType;
+                    selector.rules.push(ancestorSelectorDescriptor.ruleType);
 
                 return selector;
             });
