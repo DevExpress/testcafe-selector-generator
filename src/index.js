@@ -4,7 +4,6 @@ import { findIndex } from './utils/find-index';
 import * as RULES from './rules';
 import { getParentsUntil } from './selector-creators/utils/tag-tree-utils';
 import { SelectorDescriptor } from './selector-descriptor';
-import { storeElementAttributes } from './selector-creators/utils/attributes-watcher';
 import { SELECTOR_CREATORS } from './selector-creators';
 import { AttrSelectorCreator } from './selector-creators/attr-creator';
 import { CustomAttrSelectorCreator } from './selector-creators/custom-attr-creator';
@@ -238,20 +237,7 @@ export class SelectorGenerator {
         return result;
     }
 
-    storeElementAttributes (el, isOutEvent = false) {
-        const body  = domUtils.findDocument(el).body;
-        let element = el;
-
-        //NOTE: mouseover event is not fired for parent element if
-        // children fill all parent's space
-        while (element && element !== body) {
-            storeElementAttributes(element, this.customAttrNames, isOutEvent);
-
-            element = element.parentElement;
-        }
-    }
-
-    generateDescriptors (el) {
+    _generateDescriptors (el) {
         const elementSelectorDescriptors  = generateSelectorDescriptorsByCreators(el, this.elementSelectorCreators);
         const ancestors                   = getParentsUntil(el, domUtils.findDocument(el).body);
         const compoundSelectorDescriptors = this._generateCompoundSelectorDescriptor(el, ancestors, elementSelectorDescriptors);
@@ -261,31 +247,22 @@ export class SelectorGenerator {
         return this._cleanAndSortDescriptors(selectorDescriptors);
     }
 
-    generate (source) {
-        const isDomElement = domUtils.isDomElement(source);
+    generate (element) {
+        const selectorDescriptors = this._generateDescriptors(element);
 
-        if (isDomElement || arrayUtils.isArray(source)) {
-            const selectorDescriptors = isDomElement ? this.generateDescriptors(source) : source;
+        return arrayUtils.map(selectorDescriptors, selectorDescriptor => {
+            const { stringArray, ruleType, ancestorSelectorDescriptor } = selectorDescriptor;
 
-            return arrayUtils.map(selectorDescriptors, selectorDescriptor => {
-                const { stringArray, ruleType, ancestorSelectorDescriptor } = selectorDescriptor;
+            const selector = {
+                value: arrayUtils.join(stringArray, ''),
 
-                const selector = {
-                    rawSelector: {
-                        type:  'js-expr',
-                        value: arrayUtils.join(stringArray, ''),
-                    },
+                rules: [ruleType],
+            };
 
-                    ruleType,
-                };
+            if (ancestorSelectorDescriptor)
+                selector.rules.push(ancestorSelectorDescriptor.ruleType);
 
-                if (ancestorSelectorDescriptor)
-                    selector.ancestorRuleType = ancestorSelectorDescriptor.ruleType;
-
-                return selector;
-            });
-        }
-
-        return [];
+            return selector;
+        });
     }
 }
