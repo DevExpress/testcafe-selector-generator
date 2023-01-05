@@ -251,85 +251,6 @@ test('parent with custom attributes', function () {
     ]);
 });
 
-module('storing attributes');
-
-test('element without custom attributes', function () {
-    const strongElement = document.querySelector('.strong-class');
-
-    customSelectorGenerator.storeElementAttributes(strongElement);
-
-    strongElement.setAttribute('cust-attr', 'legend-cust-attr');
-    strongElement.setAttribute('data-test', 'legend-data-test');
-
-    deepEqual(generateSelectors(strongElement), [
-        getSelector("Selector('strong').withText('strong text')", RULE_TYPE.byText),
-        getSelector("Selector('.strong-class')", RULE_TYPE.byClassAttr),
-        getSelector("Selector('strong')", RULE_TYPE.byTagTree),
-    ]);
-
-    customSelectorGenerator.storeElementAttributes(strongElement);
-
-    deepEqual(generateSelectors(strongElement), [
-        getSelector("Selector('[cust-attr=\"legend-cust-attr\"]')", CUSTOM_ATTR_NAME),
-        getSelector("Selector('[data-test=\"legend-data-test\"]')", DATA_TEST_ATTR_NAME),
-        getSelector("Selector('strong').withText('strong text')", RULE_TYPE.byText),
-        getSelector("Selector('.strong-class')", RULE_TYPE.byClassAttr),
-        getSelector("Selector('strong')", RULE_TYPE.byTagTree),
-    ]);
-});
-
-test('element with custom attributes', function () {
-    const qElement = document.querySelector('q');
-
-    customSelectorGenerator.storeElementAttributes(qElement);
-
-    qElement.removeAttribute('cust-attr');
-
-    deepEqual(generateSelectors(qElement), [
-        getSelector("Selector('[cust-attr]')", CUSTOM_ATTR_NAME),
-        getSelector("Selector('[data-test=\"q-data-test\"]')", DATA_TEST_ATTR_NAME),
-        getSelector("Selector('.q.class')", RULE_TYPE.byClassAttr),
-        getSelector("Selector('[title=\"q-title\"]')", RULE_TYPE.byAttr),
-        getSelector("Selector('q')", RULE_TYPE.byTagTree),
-    ]);
-
-    customSelectorGenerator.storeElementAttributes(qElement);
-
-    qElement.removeAttribute('data-test');
-
-    deepEqual(generateSelectors(qElement), [
-        getSelector("Selector('[data-test=\"q-data-test\"]')", DATA_TEST_ATTR_NAME),
-        getSelector("Selector('.q.class')", RULE_TYPE.byClassAttr),
-        getSelector("Selector('[title=\"q-title\"]')", RULE_TYPE.byAttr),
-        getSelector("Selector('q')", RULE_TYPE.byTagTree),
-    ]);
-});
-
-test('use common attribute as custom', function () {
-    const img               = document.querySelector('img');
-    const selectorGenerator = createSelectorGenerator(['alt', 'data-test']);
-
-    selectorGenerator.storeElementAttributes(img);
-
-    img.removeAttribute('alt');
-
-    deepEqual(generateSelectors(img, selectorGenerator), [
-        getSelector("Selector('[alt=\"some alt\"]')", 'alt'),
-        getSelector("Selector('[data-test=\"img-data-test\"]')", DATA_TEST_ATTR_NAME),
-        getSelector("Selector('.imgclass')", RULE_TYPE.byClassAttr),
-        getSelector("Selector('img')", RULE_TYPE.byTagTree),
-    ]);
-
-    selectorGenerator.storeElementAttributes(img);
-
-    deepEqual(generateSelectors(img, selectorGenerator), [
-        getSelector("Selector('[data-test=\"img-data-test\"]')", DATA_TEST_ATTR_NAME),
-        getSelector("Selector('.imgclass')", RULE_TYPE.byClassAttr),
-        getSelector("Selector('img')", RULE_TYPE.byTagTree),
-    ]);
-});
-
-
 module('custom rule priority');
 
 test('default rule priority', function () {
@@ -375,7 +296,7 @@ test('differ custom attributes priority', function () {
     deepEqual(selectors, [
         getSelector("Selector('[cust-attr=\"label cust-attr value\"]')", CUSTOM_ATTR_NAME),
         getSelector("Selector('.some.class')", RULE_TYPE.byClassAttr),
-        getSelector("Selector('[data-test]').nth(2)", DATA_TEST_ATTR_NAME),
+        getSelector("Selector('[data-test]').nth(1)", DATA_TEST_ATTR_NAME),
         getSelector("Selector('#id123')", RULE_TYPE.byId),
         getSelector("Selector('label').nth(1)", RULE_TYPE.byTagTree),
     ]);

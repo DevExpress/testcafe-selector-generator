@@ -4,7 +4,6 @@ import { findIndex } from './utils/find-index';
 import * as RULES from './rules';
 import { getParentsUntil } from './selector-creators/utils/tag-tree-utils';
 import { SelectorDescriptor } from './selector-descriptor';
-import { storeElementAttributes } from './selector-creators/utils/attributes-watcher';
 import { SELECTOR_CREATORS } from './selector-creators';
 import { AttrSelectorCreator } from './selector-creators/attr-creator';
 import { CustomAttrSelectorCreator } from './selector-creators/custom-attr-creator';
@@ -236,19 +235,6 @@ export class SelectorGenerator {
         removeRedundantCompoundSelectorDescriptors(result);
 
         return result;
-    }
-
-    storeElementAttributes (el, isOutEvent = false) {
-        const body  = domUtils.findDocument(el).body;
-        let element = el;
-
-        //NOTE: mouseover event is not fired for parent element if
-        // children fill all parent's space
-        while (element && element !== body) {
-            storeElementAttributes(element, this.customAttrNames, isOutEvent);
-
-            element = element.parentElement;
-        }
     }
 
     generateDescriptors (el) {
