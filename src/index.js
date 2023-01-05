@@ -237,7 +237,7 @@ export class SelectorGenerator {
         return result;
     }
 
-    generateDescriptors (el) {
+    _generateDescriptors (el) {
         const elementSelectorDescriptors  = generateSelectorDescriptorsByCreators(el, this.elementSelectorCreators);
         const ancestors                   = getParentsUntil(el, domUtils.findDocument(el).body);
         const compoundSelectorDescriptors = this._generateCompoundSelectorDescriptor(el, ancestors, elementSelectorDescriptors);
@@ -247,28 +247,22 @@ export class SelectorGenerator {
         return this._cleanAndSortDescriptors(selectorDescriptors);
     }
 
-    generate (source) {
-        const isDomElement = domUtils.isDomElement(source);
+    generate (element) {
+        const selectorDescriptors = this._generateDescriptors(element);
 
-        if (isDomElement || arrayUtils.isArray(source)) {
-            const selectorDescriptors = isDomElement ? this.generateDescriptors(source) : source;
+        return arrayUtils.map(selectorDescriptors, selectorDescriptor => {
+            const { stringArray, ruleType, ancestorSelectorDescriptor } = selectorDescriptor;
 
-            return arrayUtils.map(selectorDescriptors, selectorDescriptor => {
-                const { stringArray, ruleType, ancestorSelectorDescriptor } = selectorDescriptor;
+            const selector = {
+                value: arrayUtils.join(stringArray, ''),
 
-                const selector = {
-                    value: arrayUtils.join(stringArray, ''),
+                rules: [ruleType],
+            };
 
-                    rules: [ruleType],
-                };
+            if (ancestorSelectorDescriptor)
+                selector.rules.push(ancestorSelectorDescriptor.ruleType);
 
-                if (ancestorSelectorDescriptor)
-                    selector.rules.push(ancestorSelectorDescriptor.ruleType);
-
-                return selector;
-            });
-        }
-
-        return [];
+            return selector;
+        });
     }
 }

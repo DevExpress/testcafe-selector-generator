@@ -53,12 +53,6 @@ QUnit.testDone(function () {
     iframeSandbox.off(iframeSandbox.RUN_TASK_SCRIPT, window.initIFrameTestHandler);
 });
 
-test('non DOM element', function () {
-    deepEqual(generateSelectors(null), []);
-    deepEqual(generateSelectors({}), []);
-});
-
-
 module('tag generation rule');
 
 test('unique elements', function () {
