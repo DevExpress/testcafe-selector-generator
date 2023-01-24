@@ -1,6 +1,6 @@
 {
   "name": "testcafe-selector-generator",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "",
   "author": {
     "name": "Developer Express Inc.",
@@ -9,7 +9,9 @@
   "main": "src/index.js",
   "scripts": {
     "test": "gulp test",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "publish-please": "publish-please",
+    "prepublish": "publish-please guard"
   },
   "repository": {
     "type": "git",
@@ -36,6 +38,7 @@
     "gulp-qunit-harness": "^1.0.3",
     "gulp-webmake": "^0.0.41",
     "minimist": "^1.2.7",
+    "publish-please": "^5.5.2",
     "testcafe": "^2.1.0",
     "testcafe-hammerhead": "^28.2.1"
   },
