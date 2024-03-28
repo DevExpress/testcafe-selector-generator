@@ -39,8 +39,8 @@
     "gulp-webmake": "^0.0.41",
     "minimist": "^1.2.7",
     "publish-please": "^5.5.2",
-    "testcafe": "^2.1.0",
-    "testcafe-hammerhead": "^28.2.1"
+    "testcafe": "^3.5.0",
+    "testcafe-hammerhead": "^31.7.1"
   },
   "imports": {
     "#src": [
