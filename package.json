@@ -29,14 +29,14 @@
     "src"
   ],
   "devDependencies": {
-    "@babel/core": "^7.20.2",
+    "@rollup/plugin-node-resolve": "^15.2.3",
     "babel-plugin-add-module-exports": "^1.0.4",
     "eslint": "^8.28.0",
     "eslint-plugin-align-assignments": "^1.1.2",
     "eslint-plugin-qunit": "^7.3.3",
     "gulp": "^4.0.2",
     "gulp-qunit-harness": "^1.0.3",
-    "gulp-webmake": "^0.0.41",
+    "rollup": "^4.17.2",
     "minimist": "^1.2.7",
     "publish-please": "^5.5.2",
     "testcafe": "^2.1.0",
@@ -51,5 +51,8 @@
       "./src/*.js",
       "./src/*.json"
     ]
+  },
+  "overrides": {
+    "lodash": "^4.17.21"
   }
 }
