@@ -3,9 +3,8 @@ const fs = require('node:fs');
 
 const gulp      = require('gulp');
 const parseArgs = require('minimist');
-const babelCore = require('@babel/core');
-const webmake   = require('gulp-webmake');
 const qunit     = require('gulp-qunit-harness');
+const spawn     = require('child_process').spawn;
 
 const testCafeBrowserTools = require('testcafe-browser-tools');
 
@@ -42,13 +41,7 @@ gulp.task('clear', () => {
 });
 
 gulp.task('build-run', () => {
-    const transform = (filename, code) => babelCore.transform(code, { filename });
-    const compiler  = webmake({ transform });
-
-    return gulp
-        .src('test/utils/load-selector-generator.js')
-        .pipe(compiler)
-        .pipe(gulp.dest(LIB_PATH));
+    return spawn('npx rollup -c --bundleConfigAsCjs', { shell: true, stdio: 'inherit' });
 });
 
 gulp.task('build', gulp.series('clear', 'build-run'));
