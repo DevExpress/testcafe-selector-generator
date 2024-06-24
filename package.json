@@ -36,10 +36,10 @@
     "eslint-plugin-qunit": "^7.3.3",
     "gulp": "^4.0.2",
     "gulp-qunit-harness": "^1.0.3",
-    "rollup": "^4.17.2",
     "minimist": "^1.2.7",
     "publish-please": "^5.5.2",
-    "testcafe": "^2.1.0",
+    "rollup": "^4.17.2",
+    "testcafe": "^3.6.0",
     "testcafe-hammerhead": "^28.2.1"
   },
   "imports": {
