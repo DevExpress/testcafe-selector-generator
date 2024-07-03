@@ -39,7 +39,7 @@
     "minimist": "^1.2.7",
     "publish-please": "^5.5.2",
     "rollup": "^4.17.2",
-    "testcafe": "^3.6.0",
+    "testcafe": "^3.6.2",
     "testcafe-hammerhead": "^28.2.1"
   },
   "imports": {
