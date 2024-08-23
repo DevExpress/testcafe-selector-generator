@@ -35,7 +35,7 @@
     "eslint": "^8.28.0",
     "eslint-plugin-align-assignments": "^1.1.2",
     "eslint-plugin-qunit": "^7.3.3",
-    "gulp": "^4.0.2",
+    "gulp": "^5.0.0",
     "gulp-qunit-harness": "^1.0.3",
     "minimist": "^1.2.7",
     "rollup": "^4.17.2",
