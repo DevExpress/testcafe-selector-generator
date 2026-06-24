@@ -41,7 +41,7 @@ gulp.task('clear', () => {
 });
 
 gulp.task('build-run', () => {
-    return spawn('npx rollup -c --bundleConfigAsCjs', { shell: true, stdio: 'inherit' });
+    return spawn('npx --no-install rollup -c --bundleConfigAsCjs', { shell: true, stdio: 'inherit' });
 });
 
 gulp.task('build', gulp.series('clear', 'build-run'));
